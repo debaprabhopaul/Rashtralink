@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RashtraLink | Present Better Than The Future</title>
+    
+    <!-- Professional Stack -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        rashtraBlue: '#003366',
+                        rashtraOrange: '#FF5622',
+                        indiaSaffron: '#FF9933',
+                        indiaGreen: '#138808',
+                        bgSaffron: '#FFF7ED',
+                        bgMint: '#F0FDF4',
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #ffffff;
+            color: #003366;
+            overflow-x: hidden;
+            font-feature-settings: "ss01", "cv01";
+            overflow-y: hidden; /* Locked until preloader finishes */
+        }
+
+        /* Abstract Gradient Mesh Overlay */
+        .gradient-mesh {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: 
+                radial-gradient(circle at 10% 0%, rgba(255, 153, 51, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 90% 100%, rgba(19, 136, 8, 0.05) 0%, transparent 50%),
+                linear-gradient(180deg, #FFF7ED 0%, #FFFFFF 40%, #FFFFFF 60%, #F0FDF4 100%);
+            z-index: -2;
+        }
+
+        /* The Glowing Canvas Network */
+        #network-canvas {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        /* High-End Glass UI */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(24px) saturate(200%);
+            -webkit-backdrop-filter: blur(24px) saturate(200%);
+            border: 1px solid rgba(0, 51, 102, 0.08);
+            box-shadow: 0 30px 60px -15px rgba(0, 51, 102, 0.05);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+        }
+        
+        .glass-panel:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 40px 70px -15px rgba(0, 51, 102, 0.1);
+        }
+
+        /* Typography Styling */
+        .title-gradient {
+            background: linear-gradient(135deg, #003366 0%, #0B4785 50%, #FF5622 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .viksit-bharat-gradient {
+            background: linear-gradient(90deg, #FF9933 0%, #003366 50%, #138808 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
+
+        /* Custom Sliders */
+        input[type=range] {
+            -webkit-appearance: none; width: 100%; background: transparent; margin: 10px 0;
+        }
+        input[type=range]:focus { outline: none; }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%; height: 6px; cursor: pointer;
+            background: rgba(0, 51, 102, 0.1); border-radius: 10px;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            height: 20px; width: 20px; border-radius: 50%;
+            background: #FF5622; cursor: pointer;
+            -webkit-appearance: none; margin-top: -7px;
+            box-shadow: 0 0 15px rgba(255, 86, 34, 0.4);
+            transition: transform 0.2s;
+        }
+        input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+
+        /* Feed Post Animations */
+        .feed-post { transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); will-change: filter, transform, opacity; }
+
+        /* BUG-FIXED Waving Flag */
+        .flag-container {
+            position: absolute; inset: 0; z-index: 0; overflow: hidden; 
+            opacity: 0.4; 
+            pointer-events: none;
+        }
+        .waving-flag {
+            position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: linear-gradient(135deg, rgba(255,153,51,0.85) 15%, rgba(255,255,255,0) 50%, rgba(19,136,8,0.85) 85%);
+            background-size: 200% 200%;
+            animation: wave 8s ease-in-out infinite alternate;
+            filter: blur(25px);
+        }
+        @keyframes wave {
+            0% { background-position: 0% 50%; transform: rotate(-5deg) scale(1.1); }
+            100% { background-position: 100% 50%; transform: rotate(5deg) scale(1.1); }
+        }
+
+        /* Global Click Ripple */
+        .click-ripple {
+            position: fixed;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 86, 34, 0.6);
+            transform: translate(-50%, -50%) scale(0);
+            animation: ripple-anim 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            pointer-events: none;
+            z-index: 9999;
+        }
+        @keyframes ripple-anim {
+            0% { transform: translate(-50%, -50%) scale(0.2); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(2); opacity: 0; }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(0, 51, 102, 0.2); border-radius: 10px; }
+
+        /* Slideshow Fade */
+        .slideshow-fade {
+            animation: fadeInOut 3s infinite;
+        }
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0; transform: scale(0.95); }
+            10%, 90% { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-rashtraOrange selection:text-white">
+
+    <!-- 0. PRELOADER SCREEN -->
+    <div id="preloader" class="fixed inset-0 z-[10000] bg-white flex flex-col items-center justify-center transition-opacity duration-1000">
+        <div class="overflow-hidden">
+            <h1 id="preloader-text" class="text-4xl md:text-6xl lg:text-8xl font-black text-rashtraBlue tracking-tighter translate-y-full uppercase">
+                RashtraLink
+            </h1>
+        </div>
+        <div class="w-48 h-1 bg-slate-100 mt-6 rounded-full overflow-hidden">
+            <div id="preloader-bar" class="h-full bg-rashtraOrange w-0"></div>
+        </div>
+    </div>
+
+    <!-- Ambient Backgrounds -->
+    <div class="gradient-mesh"></div>
+    <canvas id="network-canvas"></canvas>
+
+    <!-- 1. HERO SECTION -->
+    <section class="relative min-h-screen flex flex-col items-center justify-center px-6 overflow-hidden pt-10">
+        <div class="text-center w-full max-w-5xl z-10 flex flex-col items-center">
+            
+            <!-- THE LOGO -->
+            <div class="gsap-hero mb-10 relative">
+                <img src="logo.png" alt="RashtraLink" class="h-32 md:h-48 lg:h-56 w-auto object-contain drop-shadow-2xl mx-auto" onerror="this.style.display='none'">
+            </div>
+
+            <h1 class="gsap-hero text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter leading-[0.9] text-rashtraBlue mb-6">
+                Present Better <br>
+                <span class="title-gradient">Than The Future.</span>
+            </h1>
+            
+            <p class="gsap-hero text-lg md:text-2xl font-bold text-slate-600 tracking-tight max-w-3xl mx-auto mb-16 leading-relaxed">
+                An AI based Social networking platform for <span class="viksit-bharat-gradient">Indians by Indians</span> and a bit more.
+            </p>
+
+            <div class="gsap-hero flex flex-col items-center">
+                <div class="w-1 h-20 bg-gradient-to-b from-rashtraOrange to-transparent rounded-full mb-4 animate-pulse"></div>
+                <span class="text-[10px] uppercase tracking-[0.3em] font-bold text-rashtraOrange">Scroll to Initialize</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. NATIONALISM & VISION SECTION -->
+    <section class="relative py-32 px-6 flex items-center justify-center min-h-[70vh]">
+        <div class="max-w-6xl mx-auto text-center z-10 w-full">
+            <h2 class="scroll-reveal text-4xl md:text-7xl font-extrabold tracking-tighter leading-tight mb-8">
+                Engineering the <br> digital backbone of a <br>
+                <span class="viksit-bharat-gradient">Viksit Bharat.</span>
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10 mt-20">
+                <!-- BOX 1: Atmanirbhar -->
+                <div class="scroll-reveal glass-panel p-10 rounded-[2.5rem] text-left">
+                    <i data-lucide="shield" size="40" class="text-indiaSaffron mb-6"></i>
+                    <h3 class="text-2xl font-bold mb-3 uppercase tracking-widest text-rashtraBlue">Atmanirbhar Architecture</h3>
+                    <p class="text-slate-500 font-medium leading-relaxed">We are not renting digital infrastructure; we are building it. Sovereign data, indigenous algorithms, global dominance.</p>
+                </div>
+                
+                <!-- BOX 2: For Indians -->
+                <div class="scroll-reveal glass-panel p-10 rounded-[2.5rem] text-left">
+                    <i data-lucide="flag" size="40" class="text-indiaGreen mb-6"></i>
+                    <h3 class="text-2xl font-bold mb-4 uppercase tracking-widest text-rashtraBlue">
+                        "<span class="italic font-extrabold text-slate-800">For <span class="viksit-bharat-gradient">India</span>, By <span class="viksit-bharat-gradient">Indians</span></span>"
+                    </h3>
+                    <p class="text-slate-500 font-medium leading-relaxed">A technological renaissance orchestrated by the youth of the nation. Built to export Indian excellence to the planet.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. INTERACTIVE UI: THE ALGORITHM ENGINE -->
+    <section class="relative py-40 px-6 overflow-hidden">
+        <div class="max-w-7xl mx-auto z-10 relative">
+            
+            <div class="text-center mb-20 scroll-reveal">
+                <span class="px-4 py-1.5 rounded-full bg-rashtraBlue/5 text-rashtraBlue border border-rashtraBlue/10 text-[10px] font-bold uppercase tracking-[0.2em] mb-6 inline-block">Interactive Demo</span>
+                <h2 class="text-5xl md:text-6xl font-black tracking-tighter mb-6">The Custom Algorithm.</h2>
+                <p class="text-xl text-slate-500 font-medium max-w-2xl mx-auto">Stop letting dopamine algorithms control your mind. Input your intellectual diet and use the levers to architect your feed in real-time.</p>
+            </div>
+
+            <div class="flex flex-col lg:flex-row gap-10 items-start">
+                
+                <!-- Left: The Control Levers -->
+                <div class="w-full lg:w-5/12 glass-panel p-8 md:p-12 rounded-[3rem] scroll-reveal">
+                    <div class="flex items-center justify-between mb-8 border-b border-slate-200 pb-6">
+                        <div class="flex items-center gap-3">
+                            <i data-lucide="sliders" size="24" class="text-rashtraOrange"></i>
+                            <h3 class="text-2xl font-bold">Priority Matrix</h3>
+                        </div>
+                    </div>
+
+                    <div id="sliders-container">
+                        <!-- Lever 1 -->
+                        <div class="mb-8 slider-group">
+                            <div class="flex justify-between items-end mb-2">
+                                <label class="font-bold text-sm tracking-wide">Ambition & Growth</label>
+                                <span id="val-ambition" class="text-rashtraOrange font-black text-lg">80%</span>
+                            </div>
+                            <input type="range" id="slider-ambition" data-target="ambition-post" min="0" max="100" value="80" class="algo-slider">
+                        </div>
+
+                        <!-- Lever 2 -->
+                        <div class="mb-8 slider-group">
+                            <div class="flex justify-between items-end mb-2">
+                                <label class="font-bold text-sm tracking-wide">Tech & Engineering</label>
+                                <span id="val-tech" class="text-rashtraBlue font-black text-lg">60%</span>
+                            </div>
+                            <input type="range" id="slider-tech" data-target="tech-post" min="0" max="100" value="60" class="algo-slider">
+                        </div>
+
+                        <!-- Lever 3 -->
+                        <div class="mb-8 slider-group">
+                            <div class="flex justify-between items-end mb-2">
+                                <label class="font-bold text-sm tracking-wide">Entertainment (Noise)</label>
+                                <span id="val-noise" class="text-slate-400 font-black text-lg">10%</span>
+                            </div>
+                            <input type="range" id="slider-noise" data-target="noise-post" min="0" max="100" value="10" class="algo-slider">
+                        </div>
+                    </div>
+
+                    <!-- Input custom additions -->
+                    <div class="mt-4 pt-6 border-t border-slate-200">
+                        <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-3">Add Custom Variable</p>
+                        <div class="flex flex-col sm:flex-row gap-2">
+                            <input type="text" id="custom-topic-input" placeholder="E.g. Geo-Politics" maxlength="20" class="flex-grow px-4 py-3 rounded-xl border border-slate-200 focus:border-rashtraOrange focus:ring-2 focus:ring-rashtraOrange/20 outline-none text-sm font-bold bg-white/50 transition-all">
+                            <button id="add-custom-btn" class="px-6 py-3 rounded-xl bg-rashtraBlue text-white font-bold text-sm active:scale-95 transition-transform hover:shadow-lg whitespace-nowrap">Inject</button>
+                        </div>
+                        <div class="flex justify-between items-center mt-2 px-1">
+                            <p id="custom-limit-text" class="text-[10px] text-slate-400 font-bold">0 / 8 Variables Active</p>
+                            <p id="custom-error" class="text-[10px] text-red-500 font-bold hidden">Limit Reached</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: The Live Feed Simulator -->
+                <div class="w-full lg:w-7/12 relative h-[600px] glass-panel rounded-[3rem] p-6 overflow-hidden flex flex-col gap-4 scroll-reveal bg-slate-50/50">
+                    <div class="absolute top-0 left-0 w-full h-12 bg-gradient-to-b from-white/90 to-transparent z-10 rounded-t-[3rem] pointer-events-none"></div>
+                    <div class="absolute bottom-0 left-0 w-full h-12 bg-gradient-to-t from-white/90 to-transparent z-10 rounded-b-[3rem] pointer-events-none"></div>
+                    
+                    <p class="text-[10px] font-bold uppercase tracking-widest text-center text-slate-400 mb-2">Live OS Feed Synthesis</p>
+
+                    <div id="feed-container" class="flex-grow overflow-y-auto overflow-x-hidden flex flex-col gap-4 relative px-4 pt-2 pb-20 hide-scrollbar" style="scrollbar-width: none;">
+                        <!-- Post: Ambition -->
+                        <div class="feed-post ambition-post glass-panel p-5 rounded-2xl border-l-4 border-rashtraOrange w-full">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-8 h-8 rounded-full bg-rashtraOrange/10 flex items-center justify-center"><i data-lucide="target" size="14" class="text-rashtraOrange"></i></div>
+                                <div><p class="text-xs font-bold">Hustlers Assembly</p><p class="text-[9px] text-slate-400">Ambition Vector</p></div>
+                            </div>
+                            <div class="h-2 w-3/4 bg-slate-200 rounded mb-2"></div><div class="h-2 w-1/2 bg-slate-200 rounded"></div>
+                        </div>
+
+                        <!-- Post: Tech -->
+                        <div class="feed-post tech-post glass-panel p-5 rounded-2xl border-l-4 border-rashtraBlue w-full">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-8 h-8 rounded-full bg-rashtraBlue/10 flex items-center justify-center"><i data-lucide="cpu" size="14" class="text-rashtraBlue"></i></div>
+                                <div><p class="text-xs font-bold">System Architecture</p><p class="text-[9px] text-slate-400">Engineering Vector</p></div>
+                            </div>
+                            <div class="h-16 w-full bg-slate-100 rounded-xl mb-2 flex items-center justify-center"><code class="text-[8px] text-rashtraBlue font-mono">function scaleEcosystem() { ... }</code></div>
+                        </div>
+
+                        <!-- Post: Noise -->
+                        <div class="feed-post noise-post glass-panel p-5 rounded-2xl border-l-4 border-slate-400 w-full">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center"><i data-lucide="smile" size="14" class="text-slate-400"></i></div>
+                                <div><p class="text-xs font-bold text-slate-400">Viral Content</p><p class="text-[9px] text-slate-400">Noise Vector</p></div>
+                            </div>
+                            <div class="h-10 w-full bg-slate-200 rounded-xl flex items-center justify-center"><i data-lucide="image" class="text-slate-300"></i></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. UI SHOWCASE (STAIRCASE ANIMATION) -->
+    <section id="modular-experience" class="relative py-20 px-6 overflow-hidden bg-gradient-to-b from-transparent to-slate-50/50">
+        <div class="max-w-7xl mx-auto z-10 relative">
+            <div class="text-center mb-16 scroll-reveal">
+                <h2 class="text-3xl md:text-5xl font-black tracking-tighter text-rashtraBlue">A Modular Experience.</h2>
+            </div>
+
+            <!-- Staircase Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+                
+                <!-- Step 1: Profile UI -->
+                <div class="scroll-reveal glass-panel p-6 rounded-[2rem] w-full max-w-sm mx-auto shadow-xl md:translate-y-12">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="w-16 h-16 rounded-full border-2 border-rashtraOrange bg-slate-100 relative">
+                            <div class="absolute bottom-0 right-0 w-4 h-4 bg-green-500 border-2 border-white rounded-full"></div>
+                        </div>
+                        <div>
+                            <div class="h-4 w-24 bg-slate-200 rounded mb-2"></div>
+                            <div class="h-2 w-16 bg-slate-100 rounded"></div>
+                        </div>
+                    </div>
+                    <div class="flex justify-between border-t border-slate-100 pt-4 px-2">
+                        <div class="text-center"><p class="text-sm font-black">1.2K</p><p class="text-[8px] uppercase text-slate-400 font-bold">Followers</p></div>
+                        <div class="text-center"><p class="text-sm font-black text-rashtraOrange">12</p><p class="text-[8px] uppercase text-rashtraOrange font-bold">Badges</p></div>
+                    </div>
+                </div>
+
+                <!-- Step 2: Stories UI -->
+                <div class="scroll-reveal glass-panel p-6 rounded-[2rem] w-full max-w-sm mx-auto shadow-xl z-10">
+                    <h4 class="text-[10px] font-bold uppercase tracking-widest mb-4">What's Going On?</h4>
+                    <div class="flex gap-4 justify-center">
+                        <div class="w-12 h-12 rounded-full border-2 border-rashtraOrange bg-slate-100 flex items-center justify-center text-lg">🚀</div>
+                        <div class="w-12 h-12 rounded-full border-2 border-green-500 bg-slate-100 flex items-center justify-center text-lg opacity-80">📈</div>
+                        <div class="w-12 h-12 rounded-full border-2 border-green-500 bg-slate-100 flex items-center justify-center text-lg opacity-80">💼</div>
+                    </div>
+                </div>
+
+                <!-- Step 3: OneShot UI -->
+                <div class="scroll-reveal glass-panel p-4 rounded-[2rem] w-full max-w-sm mx-auto shadow-xl md:-translate-y-12">
+                     <div class="flex justify-between items-center mb-2 px-2">
+                        <h4 class="text-[10px] font-bold flex items-center gap-1"><i data-lucide="zap" size="12" class="text-rashtraOrange"></i> OneShots</h4>
+                    </div>
+                    <div class="w-full aspect-video rounded-2xl bg-emerald-100 flex items-center justify-center relative overflow-hidden transition-colors duration-1000" id="slideshow-bg">
+                        <div class="absolute top-2 left-2 bg-rashtraOrange text-white text-[8px] font-bold px-2 py-0.5 rounded-full uppercase z-10">OneShot</div>
+                        <div id="slideshow-content" class="text-center w-full px-4 slideshow-fade">
+                            <span id="slide-emoji" class="text-4xl block mb-2">🍳</span>
+                            <p id="slide-text" class="text-xs font-bold text-slate-800">Quick cooking tips in 15 seconds!</p>
+                            <p id="slide-handle" class="text-[9px] text-emerald-800 font-bold mt-1">@foodielove</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. COMING SOON -->
+    <section class="relative py-40 px-6 min-h-[70vh] flex flex-col items-center justify-center text-center overflow-hidden">
+        
+        <div class="flag-container">
+            <div class="waving-flag"></div>
+        </div>
+
+        <div class="z-10 w-full max-w-3xl relative">
+            <div class="scroll-reveal glass-panel px-8 py-16 md:p-20 rounded-[3rem] border-white/60 shadow-[0_30px_60px_rgba(0,51,102,0.15)] inline-block bg-white/40 backdrop-blur-3xl">
+                <div class="w-20 h-20 rounded-full bg-white flex items-center justify-center mx-auto mb-8 shadow-lg">
+                    <i data-lucide="lock" size="36" class="text-rashtraBlue"></i>
+                </div>
+                <h2 class="text-5xl md:text-7xl font-black tracking-tighter mb-4 text-rashtraBlue">Coming Soon.</h2>
+                <p class="text-lg md:text-xl text-slate-600 font-bold mb-10 max-w-md mx-auto">The digital ecosystem is currently under secure construction.</p>
+                <div class="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-rashtraBlue text-white font-bold text-sm shadow-[0_10px_30px_rgba(0,51,102,0.3)] cursor-default hover:scale-105 transition-transform">
+                    <div class="w-2.5 h-2.5 rounded-full bg-green-400 animate-pulse"></div>
+                    Servers Compiling Phase 1
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="py-8 text-center bg-white relative z-10 border-t border-slate-100">
+        <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-400">
+            Owned by Rashtra Group © 2026 <br class="md:hidden"> <span class="hidden md:inline">|</span> Crafted in <span class="viksit-bharat-gradient font-black">India</span>
+        </p>
+    </footer>
+
+    <!-- LOGIC & ANIMATIONS -->
+    <script>
+        lucide.createIcons();
+
+        // --- 0. BULLETPROOF PRELOADER ---
+        const initSite = () => {
+            const tl = gsap.timeline();
+            tl.to('#preloader-text', { y: 0, duration: 1, ease: 'power4.out' })
+              .to('#preloader-bar', { width: '100%', duration: 0.8, ease: 'power2.inOut' }, '-=0.5')
+              .to('#preloader', { opacity: 0, duration: 0.8, ease: 'power2.out', onComplete: () => {
+                  document.getElementById('preloader').style.display = 'none';
+                  document.body.style.overflowY = 'auto'; // Restore scroll
+                  
+                  // Animate hero smoothly
+                  gsap.from('.gsap-hero', {
+                      y: 50, opacity: 0, duration: 1.2, stagger: 0.2, ease: "power4.out"
+                  });
+              }});
+        };
+
+        // Try to load normally, but add a 4-second fail-safe so the site never freezes on mobile
+        window.addEventListener('load', initSite);
+        setTimeout(() => {
+            if(document.getElementById('preloader').style.display !== 'none') {
+                document.getElementById('preloader').style.display = 'none';
+                document.body.style.overflowY = 'auto';
+                gsap.from('.gsap-hero', { y: 50, opacity: 0, duration: 1.2, stagger: 0.2 });
+            }
+        }, 4000);
+
+        // Global Click Ripple Effect
+        document.addEventListener('click', (e) => {
+            if(e.target.tagName.toLowerCase() === 'input' || e.target.tagName.toLowerCase() === 'button') return;
+            const ripple = document.createElement('div');
+            ripple.className = 'click-ripple';
+            ripple.style.left = `${e.clientX}px`;
+            ripple.style.top = `${e.clientY}px`;
+            document.body.appendChild(ripple);
+            setTimeout(() => { if (document.body.contains(ripple)) ripple.remove(); }, 600);
+        });
+
+        // --- 1. THE GLOWING ABSTRACT NETWORK ---
+        const canvas = document.getElementById('network-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let particles = [];
+        const isMobile = window.innerWidth < 768;
+        const baseParticleCount = isMobile ? 25 : 50;
+        let targetParticleCount = baseParticleCount;
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+                this.radius = Math.random() * 2 + 1;
+                this.color = Math.random() > 0.5 ? 'rgba(255, 153, 51, 0.4)' : 'rgba(19, 136, 8, 0.3)';
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                if (this.x < 0 || this.x > width) this.vx *= -1;
+                if (this.y < 0 || this.y > height) this.vy *= -1;
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            for (let i = 0; i < baseParticleCount; i++) particles.push(new Particle());
+        }
+        initParticles();
+
+        function animateCanvas() {
+            ctx.clearRect(0, 0, width, height);
+            
+            // Dynamic network density
+            if (particles.length < targetParticleCount) particles.push(new Particle());
+            else if (particles.length > targetParticleCount) particles.pop();
+
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 150) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = `rgba(0, 51, 102, ${0.1 - dist/1500})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(animateCanvas);
+        }
+        animateCanvas();
+
+        // --- 2. GSAP SCROLL ANIMATIONS ---
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Safe Reveal for all elements with class .scroll-reveal
+        gsap.utils.toArray('.scroll-reveal').forEach(element => {
+            gsap.from(element, {
+                scrollTrigger: {
+                    trigger: element,
+                    start: 'top 85%'
+                },
+                y: 50,
+                opacity: 0,
+                duration: 1.2,
+                ease: "power3.out"
+            });
+        });
+
+        // Multiply the network density
+        ScrollTrigger.create({
+            trigger: '#modular-experience',
+            start: 'top 60%',
+            end: 'bottom 20%',
+            onEnter: () => targetParticleCount = baseParticleCount * 3,
+            onLeave: () => targetParticleCount = baseParticleCount,
+            onEnterBack: () => targetParticleCount = baseParticleCount * 3,
+            onLeaveBack: () => targetParticleCount = baseParticleCount
+        });
+
+        // Parallax background
+        window.addEventListener('scroll', () => {
+            canvas.style.transform = `translateY(${window.scrollY * 0.2}px)`;
+        });
+
+        // --- 3. ALGORITHM LOGIC ---
+        function bindSliderEvents() {
+            document.querySelectorAll('.algo-slider').forEach(slider => {
+                slider.removeEventListener('input', handleSliderChange);
+                slider.addEventListener('input', handleSliderChange);
+                slider.dispatchEvent(new Event('input'));
+            });
+        }
+
+        function handleSliderChange(e) {
+            const slider = e.target;
+            const val = parseInt(slider.value);
+            const targetClass = slider.getAttribute('data-target');
+            const idBase = slider.id.replace('slider-', '');
+            
+            const valDisplay = document.getElementById(`val-${idBase}`);
+            if(valDisplay) valDisplay.innerText = val + '%';
+
+            let color = '#003366'; 
+            if (idBase === 'ambition' || idBase.includes('custom')) color = '#FF5622'; 
+            if (idBase === 'noise') color = '#94a3b8'; 
+            slider.style.background = `linear-gradient(to right, ${color} ${val}%, rgba(0,51,102,0.1) ${val}%)`;
+
+            document.querySelectorAll(`.${targetClass}`).forEach(post => {
+                post.style.opacity = Math.max(0.1, val / 100);
+                post.style.transform = `scale(${0.8 + (val / 100) * 0.2})`;
+                post.style.filter = `blur(${(100 - val) / 20}px)`;
+                if(targetClass === 'noise-post') {
+                    post.style.order = val > 50 ? -1 : 10;
+                }
+            });
+        }
+
+        bindSliderEvents();
+
+        // Custom Input Logic
+        let customItemCount = 0;
+        const MAX_CUSTOM = 8;
+        const addCustomBtn = document.getElementById('add-custom-btn');
+        const customInput = document.getElementById('custom-topic-input');
+        const limitText = document.getElementById('custom-limit-text');
+        const errorText = document.getElementById('custom-error');
+
+        addCustomBtn.addEventListener('click', injectCustomVariable);
+        customInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') injectCustomVariable();
+        });
+
+        function injectCustomVariable() {
+            const topicName = customInput.value.trim();
+            if (!topicName) { customInput.focus(); return; }
+            if (customItemCount >= MAX_CUSTOM) return;
+
+            customItemCount++;
+            const idSuffix = `custom-${customItemCount}`;
+            const targetClass = `${idSuffix}-post`;
+
+            document.getElementById('sliders-container').insertAdjacentHTML('beforeend', `
+                <div class="mb-8 slider-group" id="group-${idSuffix}">
+                    <div class="flex justify-between items-end mb-2">
+                        <label class="font-bold text-sm tracking-wide text-rashtraBlue truncate w-2/3">${topicName} <span class="text-[10px] text-rashtraOrange font-normal ml-1">(Added)</span></label>
+                        <span id="val-${idSuffix}" class="text-rashtraOrange font-black text-lg">50%</span>
+                    </div>
+                    <input type="range" id="slider-${idSuffix}" data-target="${targetClass}" min="0" max="100" value="50" class="algo-slider">
+                </div>
+            `);
+
+            document.getElementById('feed-container').insertAdjacentHTML('afterbegin', `
+                <div class="feed-post ${targetClass} glass-panel p-5 rounded-2xl border-l-4 border-rashtraOrange w-full">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="w-8 h-8 rounded-full bg-rashtraOrange/10 flex items-center justify-center"><i data-lucide="plus-circle" size="14" class="text-rashtraOrange"></i></div>
+                        <div class="overflow-hidden"><p class="text-xs font-bold truncate">${topicName} Feed</p><p class="text-[9px] text-slate-400">Custom Vector</p></div>
+                    </div>
+                    <div class="h-2 w-full bg-slate-200 rounded mb-2"></div><div class="h-2 w-2/3 bg-slate-200 rounded"></div>
+                </div>
+            `);
+            lucide.createIcons();
+
+            customInput.value = '';
+            bindSliderEvents();
+            limitText.innerText = `${customItemCount} / ${MAX_CUSTOM} Variables Active`;
+
+            if (customItemCount >= MAX_CUSTOM) {
+                customInput.disabled = true; addCustomBtn.disabled = true;
+                customInput.placeholder = "Matrix Capacity Reached";
+                customInput.classList.add('bg-slate-100', 'cursor-not-allowed');
+                addCustomBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                errorText.classList.remove('hidden');
+            }
+        }
+
+        // --- 4. ONESHOT SLIDESHOW LOGIC ---
+        const slides = [
+            { emoji: '🍳', text: 'Quick cooking tips in 15 seconds!', handle: '@foodielove', bg: 'bg-emerald-100', textCol: 'text-emerald-800' },
+            { emoji: '🚀', text: 'Breakdown: ISRO Gaganyaan Engine', handle: '@aerospace_ind', bg: 'bg-orange-100', textCol: 'text-orange-800' },
+            { emoji: '📊', text: 'NIFTY 50 Analysis for Tomorrow', handle: '@finance_guru', bg: 'bg-blue-100', textCol: 'text-blue-800' }
+        ];
+        
+        let currentSlide = 0;
+        setInterval(() => {
+            setTimeout(() => {
+                currentSlide = (currentSlide + 1) % slides.length;
+                const data = slides[currentSlide];
+                document.getElementById('slide-emoji').innerText = data.emoji;
+                document.getElementById('slide-text').innerText = data.text;
+                document.getElementById('slide-handle').innerText = data.handle;
+                document.getElementById('slide-handle').className = `text-[9px] font-bold mt-1 ${data.textCol}`;
+                document.getElementById('slideshow-bg').className = `w-full aspect-video rounded-2xl flex items-center justify-center relative overflow-hidden transition-colors duration-1000 ${data.bg}`;
+            }, 1500); 
+        }, 3000);
+
+    </script>
+</body>
+</html>
+
+
