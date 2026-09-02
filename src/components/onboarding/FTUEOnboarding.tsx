@@ -84,12 +84,25 @@ export const FTUEOnboarding: React.FC = () => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [showPhoneInput, setShowPhoneInput] = useState(false);
   const [customTagInput, setCustomTagInput] = useState('');
+  const [isOAuthAuthenticating, setIsOAuthAuthenticating] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  // When user signs in with Google, sync profile and advance to Question 1
+  // Check if returning from Google OAuth redirect in URL
   useEffect(() => {
-    if (isLoggedIn && step === 0 && !ftueCompleted) {
-      setStep(1);
+    if (typeof window !== 'undefined') {
+      if (window.location.hash.includes('access_token') || window.location.search.includes('code=')) {
+        setIsOAuthAuthenticating(true);
+      }
+    }
+  }, []);
+
+  // When user signs in with Google, sync profile and advance directly to Question 1
+  useEffect(() => {
+    if (isLoggedIn) {
+      setIsOAuthAuthenticating(false);
+      if (step === 0 && !ftueCompleted) {
+        setStep(1);
+      }
       if (currentUser?.full_name && currentUser.full_name !== 'Citizen of Bharat') {
         setFullName(currentUser.full_name);
       }
@@ -239,7 +252,20 @@ export const FTUEOnboarding: React.FC = () => {
         </div>
 
         {/* STEP 0: Sovereign Welcome & Manifesto Auth Portal */}
-        {step === 0 && (
+        {step === 0 && isOAuthAuthenticating && !isLoggedIn && (
+          <div className="py-12 flex flex-col items-center justify-center text-center space-y-4 animate-fade-in-up">
+            <div className="relative w-14 h-14 flex items-center justify-center">
+              <div className="absolute inset-0 rounded-full border-4 border-saffron/20 animate-ping" />
+              <div className="w-10 h-10 rounded-full border-4 border-saffron border-t-transparent animate-spin" />
+            </div>
+            <div className="space-y-1">
+              <h3 className="text-lg font-bold text-white">Authenticating Sovereign Identity...</h3>
+              <p className="text-xs text-slate-300">Synchronizing your Google profile with Rashtralink.</p>
+            </div>
+          </div>
+        )}
+
+        {step === 0 && (!isOAuthAuthenticating || isLoggedIn) && (
           <div className="space-y-5 animate-spring-pop">
             {/* Top Brand Statement */}
             <div className="text-center space-y-2">
@@ -297,6 +323,7 @@ export const FTUEOnboarding: React.FC = () => {
               <button
                 type="button"
                 onClick={() => {
+                  setIsOAuthAuthenticating(true);
                   loginWithGoogle();
                 }}
                 className="w-full flex items-center justify-center gap-3 py-3.5 px-4 rounded-2xl bg-white text-[#081D34] font-bold text-xs sm:text-sm hover:bg-slate-100 transition-all shadow-md active:scale-[0.98]"
